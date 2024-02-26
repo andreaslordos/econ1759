@@ -1,24 +1,17 @@
 import plotly.graph_objects as go
-from scipy.stats import binom
-import numpy as np
+import pandas as pd
 import streamlit as st
 
-# Calculate prob of a CDO^2 default
-def cdo2_default_probability(ind_default_prob, tranche):
-    prob_cdo_default = 1 - binom.cdf(tranche - 1, 100, ind_default_prob)
-    prob_cdo2_default = 1 - binom.cdf(tranche - 1, 100, prob_cdo_default)
-    return prob_cdo2_default
+# Load the data from the CSV file
+df = pd.read_csv('cdo2_default_probabilities.csv')
 
+# Initialize the figure
 fig = go.Figure()
 
 default_tranche = 10
 
-# Generate data for graph
-ind_default_probs = np.linspace(0, 0.5, 500)  # Range of individual default probabilities
-probs = [cdo2_default_probability(ind_default_prob, default_tranche) for ind_default_prob in ind_default_probs]
-
-# Add the initial trace
-fig.add_trace(go.Scatter(x=ind_default_probs, y=probs, mode='lines'))
+# Add the initial trace using the default tranche data
+fig.add_trace(go.Scatter(x=df['ind_default_prob'], y=df[f'tranche_{default_tranche}'], mode='lines'))
 
 # Update layout with the slider for tranche adjustments
 fig.update_layout(
@@ -39,7 +32,7 @@ fig.update_layout(
         'steps': [{
             'label': f'{i}',
             'method': 'restyle',
-            'args': [{'y': [[cdo2_default_probability(x, i) for x in ind_default_probs]]}]
+            'args': [{'y': [df[f'tranche_{i}']]}]
         } for i in range(101)]
     }]
 )
@@ -47,4 +40,5 @@ fig.update_layout(
 # Set the default slider value to 10
 fig['layout']['sliders'][0]['active'] = default_tranche
 
+# Display the figure in Streamlit
 st.plotly_chart(fig)
