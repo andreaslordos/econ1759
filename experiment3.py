@@ -2,8 +2,8 @@ import plotly.graph_objects as go
 import pandas as pd
 import streamlit as st
 
-# Load the data from the CSV file
-df = pd.read_csv('cdo2_default_probabilities.csv')
+# Load the updated data from the CSV file
+df = pd.read_csv('cdo2_default_probabilities_updated.csv')
 
 # Initialize the figure
 fig = go.Figure()
@@ -17,6 +17,7 @@ fig.add_trace(go.Scatter(x=df['ind_default_prob'], y=df[f'tranche_{default_tranc
 fig.update_layout(
     title="Probability of CDO^2 Default based on Individual Default Probability",
     xaxis_title="Individual Default Probability",
+    xaxis_range=[0, 1],  # Set the x-axis range to 0 to 1
     yaxis_title="Probability of CDO^2 Default",
     sliders=[{
         'pad': {'t': 50},

@@ -9,7 +9,7 @@ def cdo2_default_probability(ind_default_prob, tranche):
     return prob_cdo2_default
 
 # Generate data
-ind_default_probs = np.linspace(0, 0.5, 500)  # Range of individual default probabilities
+ind_default_probs = np.linspace(0, 1, 500)  # Adjusted range of individual default probabilities to 0 to 1
 tranches = range(101)  # Range of tranches
 
 # Prepare a DataFrame to hold the data
@@ -20,4 +20,4 @@ for tranche in tranches:
 df = pd.DataFrame(data)
 
 # Save the DataFrame to a file
-df.to_csv('cdo2_default_probabilities.csv', index=False)
+df.to_csv('cdo2_default_probabilities_updated.csv', index=False)
